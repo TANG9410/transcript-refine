@@ -1,0 +1,60 @@
+{
+  "optimizer_hints": {
+    "capability": "Refine Chinese transcripts into exchange records, review summaries, or learning materials with speaker safety and read-back verification",
+    "inputs": ["录音逐字稿", "网页转写", "客户访谈", "会议记录", "课程讲座", "Get笔记原文"],
+    "trigger_actions": ["整理逐字稿", "整理录音转写", "生成交流实录", "生成复盘纪要", "整理学习材料"],
+    "exclusions": ["客户方案写作", "销售教练", "营销文案", "翻译", "文件清理"],
+    "artifacts": ["交流实录稿", "复盘纪要稿", "学习整理稿"]
+  },
+  "fallback_positive_concepts": ["transcript_refinement", "delivery_mode", "speaker_safety"],
+  "positive_concepts": {
+    "transcript_refinement": {
+      "weight": 0.42,
+      "phrases": ["逐字稿", "录音转写", "录音整理", "转写整理", "客户访谈", "会议记录", "整理"]
+    },
+    "delivery_mode": {
+      "weight": 0.28,
+      "phrases": ["交流实录", "复盘纪要", "会议纪要", "行动项", "学习整理", "课程", "讲座", "知识框架"]
+    },
+    "speaker_safety": {
+      "weight": 0.18,
+      "phrases": ["多人对话", "说话人", "人物映射", "speaker-map"]
+    },
+    "getnote_source": {
+      "weight": 0.12,
+      "phrases": ["Get笔记", "audio.original", "web_page.content"]
+    }
+  },
+  "negative_concepts": {
+    "proposal_writing": {
+      "weight": 0.4,
+      "exclusive": true,
+      "phrases": ["服务方案", "客户方案", "解决方案", "GEO 方案", "提案"]
+    },
+    "sales_coaching": {
+      "weight": 0.4,
+      "exclusive": true,
+      "phrases": ["销售员", "成交推进", "销售话术", "pipeline"]
+    },
+    "translation": {
+      "weight": 0.45,
+      "exclusive": true,
+      "phrases": ["翻译", "译成中文", "译成英文"]
+    },
+    "cleanup": {
+      "weight": 0.45,
+      "exclusive": true,
+      "phrases": ["删除文件", "清理文件", "卸载"]
+    },
+    "non_transcript_organizing": {
+      "weight": 0.38,
+      "exclusive": true,
+      "phrases": ["客户名单", "CRM", "公众号文章", "待办", "日程"]
+    },
+    "explain_only": {
+      "weight": 0.35,
+      "exclusive": true,
+      "phrases": ["解释一下", "什么是", "讲讲"]
+    }
+  }
+}

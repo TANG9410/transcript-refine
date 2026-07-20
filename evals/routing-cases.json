@@ -1,0 +1,73 @@
+{
+  "routing_cases": [
+    {
+      "input": "整理这篇商务逐字稿",
+      "expected": "需要确认（推荐交流实录稿）"
+    },
+    {
+      "input": "保留对话的感觉，把交流过程整理清楚",
+      "expected": "交流实录稿"
+    },
+    {
+      "input": "这次客户访谈帮我整理一下",
+      "expected": "需要确认（推荐交流实录稿）"
+    },
+    {
+      "input": "只要复盘和行动项，不用保留完整对话",
+      "expected": "复盘纪要稿"
+    },
+    {
+      "input": "给我一份会议纪要和核心结论",
+      "expected": "复盘纪要稿"
+    },
+    {
+      "input": "整理这堂课程，形成知识框架",
+      "expected": "学习整理稿"
+    },
+    {
+      "input": "把这次讲座和案例整理成学习材料",
+      "expected": "学习整理稿"
+    },
+    {
+      "input": "整理一下",
+      "expected": "需要三选一"
+    }
+  ],
+  "ratio_cases": [
+    {
+      "source_chars": 61349,
+      "draft_chars": 5276,
+      "expected_warning": "possible over-compression"
+    },
+    {
+      "source_chars": 61349,
+      "draft_chars": 57569,
+      "expected_warning": "possible near-verbatim搬运"
+    },
+    {
+      "source_chars": 61349,
+      "draft_chars": 24682,
+      "expected_warning": null,
+      "note": "比例正常也不能单独判定语义合格"
+    },
+    {
+      "source_chars": 39178,
+      "draft_chars": 8290,
+      "expected_warning": "possible over-compression",
+      "note": "学习整理稿要点化失败案例"
+    },
+    {
+      "source_chars": 39178,
+      "draft_chars": 28009,
+      "expected_warning": null,
+      "note": "详细学习稿方向，仍需检查知识结构和覆盖表"
+    }
+  ],
+  "speaker_cases": [
+    {
+      "people": 3,
+      "asr_channels": 2,
+      "expected": "必须建立人工锚点或使用低置信标签，禁止声道直接映射姓名"
+    }
+  ]
+}

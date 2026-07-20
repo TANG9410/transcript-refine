@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "invalidated": false,
+  "people_count": 3,
+  "asr_channel_count": 2,
+  "mappings": [
+    {
+      "asr_label": "说话人1",
+      "output_label": "说话人A",
+      "person": null,
+      "candidates": ["唐玮", "刘总"],
+      "evidence": ["同一ASR声道内出现两种角色，证据不足以拆分"],
+      "confidence": "low",
+      "status": "unresolved"
+    },
+    {
+      "asr_label": "说话人2",
+      "output_label": "马总",
+      "person": "马总",
+      "evidence": ["自我介绍、称呼和业务角色一致"],
+      "confidence": "high",
+      "status": "locked"
+    }
+  ]
+}

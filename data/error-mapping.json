@@ -1,0 +1,84 @@
+{
+  "version": "1.0",
+  "updated": "2026-04-28",
+  "description": "逐字稿常见语音识别错误映射表，基于实际处理经验积累",
+  "mappings": {
+    "O P C": "OBC",
+    "OPC": "OBC",
+    "oppo": "OBC",
+    "维推接": "Way to AGI",
+    "维图ADI": "Way to AGI",
+    "维图I加": "Way to AGI",
+    "维托I加": "Way to AGI",
+    "委托AI": "Way to AGI",
+    "委托AJ": "Way to AGI",
+    "唯two唯J I": "Way to AGI",
+    "维推GI": "Way to AGI",
+    "imagetwo": "Midjourney",
+    "阴霾净土": "Midjourney",
+    "后羿西": "后研院",
+    "后羿": "后研院",
+    "苑那边": "后研院",
+    "唐鸟": "唐玮",
+    "唐淼": "唐玮",
+    "荷莫斯": "Hermes",
+    "荷斯": "Hermes",
+    "克 code": "Claude Code",
+    "克拉德 code": "Claude Code",
+    "openclaw": "OpenClaw",
+    "大标": "数据标注",
+    "date hot": "Data Hunter",
+    "200那个会": "2050大会",
+    "200那个那个会": "2050大会",
+    "大幕": "大拿",
+    "龙虾scale": "Lobster Scale",
+    "西域": "系列",
+    "虾月说": "侠月说",
+    "馄饨": "混沌",
+    "克 code修": "Claude Code修",
+    "打标": "数据标注",
+    "抽血": "抽象",
+    "陪跑": "陪跑",
+    "本业加AI": "本业+AI",
+    "AI加本业": "AI+本业",
+    "geo": "GEO",
+    "seo": "SEO",
+    "aigc": "AIGC",
+    "几番": "宝胜",
+    "微工号": "微信工号"
+  },
+  "context_rules": [
+    {
+      "rule": "OBC相关：O P C、OPC、oppo 在讨论AI社区/商业化/政策语境下均为 OBC 的识别错误",
+      "examples": ["O P C大会 → OBC大会", "走OPC道路 → 走OBC道路"]
+    },
+    {
+      "rule": "Way to AGI相关：各种奇怪音译在社区名称语境下均指 Way to AGI",
+      "examples": ["维推接 → Way to AGI", "委托AI → Way to AGI"]
+    },
+    {
+      "rule": "Midjourney：需要翻墙的AI绘图工具，imagetwo/阴霾净土均为误识别",
+      "examples": ["imagetwo需要翻墙 → Midjourney需要翻墙"]
+    },
+    {
+      "rule": "说话人标注：Get笔记自动识别的说话人标签可能有误，需要根据对话内容交叉验证",
+      "examples": ["🟣被标为唐玮但实际是另一个人 → 需根据内容判断"]
+    },
+    {
+      "rule": "工具名称：AI编程工具名称常被音译错误",
+      "examples": ["荷莫斯 → Hermes", "克code → Claude Code"]
+    },
+    {
+      "rule": "缩写词大小写：AI营销相关缩写词（GEO、SEO、AIGC）常被识别为小写，需统一为大写",
+      "examples": ["geo营销 → GEO营销", "seo优化 → SEO优化", "aigc矩阵 → AIGC矩阵"]
+    },
+    {
+      "rule": "品牌名称音译：电缆行业品牌名称（宝胜）可能被错误识别为相似发音词",
+      "examples": ["上海买几番 → 上海买宝胜"]
+    },
+    {
+      "rule": "微信相关：微信工号可能被识别为微工号",
+      "examples": ["微工号里面 → 微信工号里面"]
+    }
+  ]
+}

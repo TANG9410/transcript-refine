@@ -1,0 +1,19 @@
+# Python caches and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.test-tmp-root/
+
+# Runtime output and local private state
+outputs/
+.workbuddy/
+*.log
+*.tmp
+*.bak
+
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key

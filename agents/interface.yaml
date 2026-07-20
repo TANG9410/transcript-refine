@@ -1,0 +1,24 @@
+interface:
+  display_name: "Transcript Refine v3"
+  short_description: "三种主稿统一入口，复杂多人先锁定人物，保存后可验证"
+  default_prompt: "Use $transcript-refine-v3 to整理这篇逐字稿；商务或多人对话未明确交付形态时，先推荐交流实录稿并等待确认；确认后读取唯一分支，复杂多人先锁定人物，再写稿、校验和保存。"
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "powershell"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "metadata-adapter"
+    claude: "neutral-source-plus-adapter"
+    generic: "neutral-source"

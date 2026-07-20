@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "invalidated": true,
+  "people_count": 3,
+  "asr_channel_count": 2,
+  "mappings": [
+    {
+      "asr_label": "说话人1",
+      "output_label": "说话人A",
+      "person": null,
+      "candidates": ["唐玮"],
+      "evidence": ["用户已纠正原映射，待重新核对"],
+      "confidence": "low",
+      "status": "unresolved"
+    }
+  ]
+}

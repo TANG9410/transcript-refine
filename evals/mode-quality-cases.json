@@ -1,0 +1,16 @@
+{
+  "learning": {
+    "source": "evals/sample-learning-source.txt",
+    "good": "evals/sample-learning-good.md",
+    "bad": "evals/sample-learning-bad.md"
+  },
+  "review": {
+    "source": "evals/sample-review-source.txt",
+    "good": "evals/sample-review-good.md",
+    "bad": "evals/sample-review-bad.md"
+  },
+  "exchange": {
+    "source": "evals/sample-source.txt",
+    "good": "evals/sample-exchange.md"
+  }
+}
