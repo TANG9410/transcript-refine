@@ -44,7 +44,7 @@ def main():
     scripts = Path(__file__).resolve().parent
     update = load(scripts / "update-note.py", "update_note_under_test")
     create = load(scripts / "refine-transcript.py", "refine_transcript_under_test")
-    update.load_config = create.load_config = lambda: {}
+    update.load_config = create.load_config = lambda *args: {}
     failures = []
     test_temp_root = scripts / ".test-tmp-root"
     test_temp_root.mkdir(exist_ok=True)

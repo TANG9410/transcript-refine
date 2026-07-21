@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "default_policy": {
+    "decision": "deny",
+    "note": "Local Markdown mode never requires network access."
+  },
+  "scripts": {
+    "scripts/refine-transcript.py": {
+      "allowed_hosts": ["openapi.biji.com"],
+      "decision": "allow-only-on-explicit-user-request",
+      "purpose": "Optional Getnote read and save adapter."
+    },
+    "scripts/update-note.py": {
+      "allowed_hosts": ["openapi.biji.com"],
+      "decision": "allow-only-on-explicit-user-request",
+      "purpose": "Optional Getnote update and read-back adapter."
+    }
+  }
+}

@@ -18,12 +18,23 @@ CONFIG_PATHS = [
 API_BASE = "https://openapi.biji.com/open/api/v1/resource"
 
 
-def load_config():
-    for path in CONFIG_PATHS:
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as handle:
-                return json.load(handle)
-    raise FileNotFoundError(f"Getnote config not found. Searched: {', '.join(CONFIG_PATHS)}")
+def resolve_config_path(explicit_config=None):
+    candidates = [explicit_config] if explicit_config else []
+    candidates.extend(CONFIG_PATHS)
+    for path in candidates:
+        if path and os.path.isfile(path):
+            return path
+    return None
+
+
+def load_config(explicit_config=None):
+    path = resolve_config_path(explicit_config)
+    if not path:
+        raise FileNotFoundError(
+            "Getnote optional adapter config not found. Use local Markdown output, or provide --config <your-local-config.json>."
+        )
+    with open(path, "r", encoding="utf-8") as handle:
+        return json.load(handle)
 
 
 def read_file_content(filepath):
@@ -88,6 +99,7 @@ def emit(report, json_mode):
 def main():
     parser = argparse.ArgumentParser(description="更新Get笔记并执行read-back；不删除本地文件")
     parser.add_argument("--note-id", required=True, help="用户明确指定的既有精炼笔记ID")
+    parser.add_argument("--config", default=None, help="可选：使用者自己的本机 Getnote 配置路径")
     parser.add_argument("--title", default=None, help="新标题（可选）")
     parser.add_argument("--file", default=None, help="从文件读取内容（UTF-8）")
     parser.add_argument("--content", default=None, help="直接传入短文本")
@@ -103,7 +115,7 @@ def main():
 
     content = read_file_content(args.file) if args.file else args.content
     warning = "--no-cleanup 已无需使用；脚本不会删除任何本地文件" if args.no_cleanup else None
-    config = load_config()
+    config = load_config(args.config)
     payload = build_update_payload(args.note_id, title=args.title, content=content)
 
     if args.dry_run:

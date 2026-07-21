@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-07-21",
+  "capabilities": {
+    "network": {
+      "decision": "approved",
+      "reviewer": "唐玮",
+      "reason": "Only the optional Getnote adapter may contact the declared API host after an explicit user request and local configuration check.",
+      "scope": "scripts/refine-transcript.py; scripts/update-note.py; openapi.biji.com only",
+      "expires_at": "2026-10-21",
+      "evidence": ["security/network_policy.json", "SECURITY.md", "INSTALL.md"],
+      "target_enforcement": {"openai": "manual-user-request", "claude": "manual-user-request", "generic": "manual-user-request", "vscode": "manual-user-request"}
+    },
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "唐玮",
+      "reason": "Regression tests create only repository-local temporary fixtures and remove them after completion; no input transcript is deleted.",
+      "scope": "scripts/test_optional_getnote.py; scripts/test_save_scripts.py; scripts/.test-tmp-root only",
+      "expires_at": "2026-10-21",
+      "evidence": ["scripts/test_optional_getnote.py", "scripts/test_save_scripts.py", "SECURITY.md"],
+      "target_enforcement": {"openai": "repository-local-only", "claude": "repository-local-only", "generic": "repository-local-only", "vscode": "repository-local-only"}
+    }
+  }
+}

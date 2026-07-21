@@ -1,25 +1,39 @@
 {
   "name": "transcript-refine-v3",
-  "version": "3.8.0",
+  "version": "3.9.0",
   "owner": "唐玮",
-  "updated_at": "2026-07-13",
+  "updated_at": "2026-07-21",
   "status": "active",
   "maturity_tier": "production",
   "lifecycle_stage": "production",
   "context_budget_tier": "production",
   "review_cadence": "quarterly",
-  "target_platforms": ["workbuddy", "claude-code", "codex"],
-  "factory_components": ["references", "scripts", "data", "evals", "reports"],
+  "target_platforms": [
+    "workbuddy",
+    "claude-code",
+    "codex"
+  ],
+  "factory_components": [
+    "references",
+    "scripts",
+    "data",
+    "evals",
+    "reports"
+  ],
   "metadata": {
     "philosophy": "公共路由，单分支强制加载，人物先锁定，保存可验证",
-    "primary_artifacts": ["交流实录稿", "复盘纪要稿", "学习整理稿"],
+    "primary_artifacts": [
+      "交流实录稿",
+      "复盘纪要稿",
+      "学习整理稿"
+    ],
     "branch_contracts": {
       "交流实录稿": "references/modes/exchange.md",
       "复盘纪要稿": "references/modes/review.md",
       "学习整理稿": "references/modes/learning.md"
     },
     "default_artifact": "未明确商务或多人对话时须用户确认（推荐交流实录稿）",
-    "default_destination": "new-getnote-note",
+    "default_destination": "local-markdown",
     "temporary_workspace": ".workbuddy/temp/transcript-refine/<task-id>",
     "key_gates": [
       "路由后必须完整读取唯一对应分支合同",
@@ -47,6 +61,17 @@
       "transcript-refine-v3 3.6.0",
       "复杂多人逐字稿历史线程证据审计",
       "用户对本地文件数量与一级目录整洁度的实际反馈"
+    ],
+    "optional_adapters": {
+      "getnote": "Enable only after an explicit user request and a user-owned local configuration; never store credentials in the repository, prompts, or reports."
+    },
+    "changelog_3_9_0": [
+      "Open-source release defaults to local Markdown; Getnote read/write is an optional adapter.",
+      "Added safe installer, MIT license, contribution and security policies, and public-release governance evidence."
     ]
-  }
+  },
+  "input_files": "file-backed fixture",
+  "output_contract": "Three transcript artifact modes; local Markdown by default; Getnote writes require explicit user request and local configuration.",
+  "rollback_boundary": "Rollback only the public repository release or installed copy; never modify source transcripts, remote notes, or local credentials.",
+  "trust_report": "reports/trust-report.md"
 }

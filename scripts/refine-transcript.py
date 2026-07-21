@@ -20,12 +20,23 @@ API_BASE = "https://openapi.biji.com/open/api/v1/resource"
 FORMATS = ("交流实录稿", "复盘纪要稿", "学习整理稿")
 
 
-def load_config():
-    for path in CONFIG_PATHS:
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as handle:
-                return json.load(handle)
-    raise FileNotFoundError(f"Getnote config not found. Searched: {', '.join(CONFIG_PATHS)}")
+def resolve_config_path(explicit_config=None):
+    candidates = [explicit_config] if explicit_config else []
+    candidates.extend(CONFIG_PATHS)
+    for path in candidates:
+        if path and os.path.isfile(path):
+            return path
+    return None
+
+
+def load_config(explicit_config=None):
+    path = resolve_config_path(explicit_config)
+    if not path:
+        raise FileNotFoundError(
+            "Getnote optional adapter config not found. Use local Markdown output, or provide --config <your-local-config.json>."
+        )
+    with open(path, "r", encoding="utf-8") as handle:
+        return json.load(handle)
 
 
 def read_file_content(filepath):
@@ -98,6 +109,7 @@ def emit(report, json_mode):
 def main():
     parser = argparse.ArgumentParser(description="创建新的精炼笔记并read-back；不删除本地文件")
     parser.add_argument("--note-id", required=True, help="源笔记ID（原笔记不动）")
+    parser.add_argument("--config", default=None, help="可选：使用者自己的本机 Getnote 配置路径")
     parser.add_argument("--file", default=None, help="已完成校验的最终稿文件（UTF-8）")
     parser.add_argument("--scene", default=None, help="兼容元数据，不参与主稿路由")
     parser.add_argument("--format", choices=FORMATS, default=None, help="Skill已确定的主稿类型")
@@ -108,7 +120,7 @@ def main():
     parser.add_argument("--json", action="store_true", help="输出JSON保存与read-back结果")
     args = parser.parse_args()
 
-    config = load_config()
+    config = load_config(args.config)
     if args.fetch_only:
         note = get_note_detail(config, args.note_id)
         print(f"Title: {note.get('title')}")
