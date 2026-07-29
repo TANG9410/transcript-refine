@@ -1,7 +1,7 @@
 interface:
   display_name: "Transcript Refine v3"
-  short_description: "三种主稿统一入口，复杂多人先锁定人物，默认本地 Markdown 交付"
-  default_prompt: "Use $transcript-refine-v3 to整理这篇逐字稿；商务或多人对话未明确交付形态时，先推荐交流实录稿并等待确认；确认后读取唯一分支，复杂多人先锁定人物，再写稿、校验并交付本地 Markdown。仅在我明确要求且已配置 Get笔记时才保存到 Get笔记。"
+  short_description: "三种主稿统一入口，交流实录默认轻度保真，默认本地 Markdown 交付"
+  default_prompt: "Use $transcript-refine-v3 to整理这篇逐字稿；商务或多人对话未明确交付形态时，先推荐交流实录稿并等待确认；交流实录确认后默认轻度精炼，不再询问尺度，只有用户明确要求才切换中度或重度；读取唯一分支，复杂多人先锁定人物，再写稿、校验并交付本地 Markdown。仅在我明确要求且已配置 Get笔记时才保存到 Get笔记。"
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

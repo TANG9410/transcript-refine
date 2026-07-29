@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "skill_dir": "E:/workbuddy/专家搭建/github/transcript-refine-v3",
+  "skill_dir": ".",
   "summary": {
     "scanned_files": 43,
     "script_count": 8,
@@ -21,7 +21,7 @@
     "interactive_script_count": 0,
     "package_hash_scope": "source-contract-without-generated-reports",
     "package_hash_file_count": 43,
-    "package_sha256": "8981cadabc952806ec7c947b9cc019c93da01a22522771cad8ee90ed743335f0"
+    "package_sha256": "19e4030aa80593059759ce3c7b3c7aaa9fafb153d915efc7b81705692df6e16c"
   },
   "failures": [],
   "warnings": [
@@ -147,8 +147,12 @@
       "uses_network": false,
       "uses_file_write": false,
       "uses_subprocess": false,
-      "network_urls": [],
-      "network_hosts": []
+      "network_urls": [
+        "https://getnotes\\.seek:\\d+"
+      ],
+      "network_hosts": [
+        "getnotes\\.seek"
+      ]
     }
   ],
   "dependencies": {
@@ -314,7 +318,7 @@
     "remote_metadata_policy": "allow-metadata-only"
   },
   "artifacts": {
-    "json": "E:/workbuddy/专家搭建/github/transcript-refine-v3/reports/trust-check.json",
-    "markdown": "E:/workbuddy/专家搭建/github/transcript-refine-v3/reports/trust-report.md"
+    "json": "reports/trust-check.json",
+    "markdown": "reports/trust-report.md"
   }
 }

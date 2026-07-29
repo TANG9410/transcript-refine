@@ -12,6 +12,7 @@ TIME = r"\d{2}:\d{2}(?::\d{2})?"
 TOPIC_RE = re.compile(rf"^##\s+(.+?)\s+[\[（(]({TIME})\s*[-~～—–]\s*({TIME})[\]）)]\s*$")
 SPEAKER_RE = re.compile(r"^\*\*(.+?)[：:]\*\*")
 TIME_TOKEN_RE = re.compile(rf"\[{TIME}\]")
+SOURCE_TIME_MARKER_RE = re.compile(rf"(?m)(?:\[{TIME}\]|^\s*(?:[-*]\s*)?{TIME}\s*$|https://getnotes\.seek:\d+)")
 STANDALONE_TIME_RE = re.compile(rf"^\s*\*{{0,2}}\[{TIME}\]\*{{0,2}}\s*$")
 ANCHOR_RE = re.compile(r"【S\d{2,}(?:｜[^】]+)+】")
 SOURCE_ID_RE = re.compile(r"\bS\d{2,}\b")
@@ -40,13 +41,13 @@ def parse_time(value):
     return hour * 3600 + minute * 60 + second
 
 
-def retention_warning(draft_text, source_text):
+def retention_warning(draft_text, source_text, warn_near_verbatim=True):
     if not source_text or len(source_text) < 10000:
         return None, None
     ratio = len(draft_text) / len(source_text)
     if ratio < 0.35:
         return ratio, f"retention ratio {ratio:.1%}: possible over-compression"
-    if ratio > 0.80:
+    if warn_near_verbatim and ratio > 0.80:
         return ratio, f"retention ratio {ratio:.1%}: possible near-verbatim搬运"
     return ratio, None
 
@@ -147,7 +148,8 @@ def validate_speaker_map(draft_text, speaker_map, people_count=None, asr_channel
 
 
 def analyze_exchange(draft_text, source_text=None, expected_duration=None):
-    issues, warnings, body_lines, topics = [], [], [], []
+    issues, warnings, body_lines, topics, plain_topics = [], [], [], [], []
+    source_has_time = None if source_text is None else bool(SOURCE_TIME_MARKER_RE.search(source_text))
     for line in draft_text.splitlines():
         if EXCHANGE_APPENDIX_RE.match(line.strip()):
             break
@@ -158,7 +160,13 @@ def analyze_exchange(draft_text, source_text=None, expected_duration=None):
             continue
         match = TOPIC_RE.match(line)
         if not match:
-            issues.append(f"line {line_no}: topic heading missing valid time range")
+            if source_has_time is False:
+                plain_topics.append(line_no)
+            else:
+                issues.append(f"line {line_no}: topic heading missing valid time range")
+            continue
+        if source_has_time is False:
+            issues.append(f"line {line_no}: source has no timestamps; draft must not invent a time range")
             continue
         try:
             start, end = parse_time(match.group(2)), parse_time(match.group(3))
@@ -168,8 +176,8 @@ def analyze_exchange(draft_text, source_text=None, expected_duration=None):
         if end < start:
             issues.append(f"line {line_no}: topic end precedes start")
         topics.append((line_no, start, end))
-    if not topics:
-        issues.append("no timed topic headings found")
+    if not topics and not plain_topics:
+        issues.append("no topic headings found")
     for previous, current in zip(topics, topics[1:]):
         if current[1] < previous[1]:
             issues.append(f"line {current[0]}: topic start time is not monotonic")
@@ -211,10 +219,11 @@ def analyze_exchange(draft_text, source_text=None, expected_duration=None):
         warnings.append(f"filler runs found: {filler_hits}")
     if noise_hits:
         warnings.append(f"known ASR noise found: {noise_hits}")
-    ratio, ratio_warning = retention_warning(body_text, source_text)
+    # 交流实录默认轻度精炼，高保留率本身不是近似搬运风险，不能反向驱动删字。
+    ratio, ratio_warning = retention_warning(body_text, source_text, warn_near_verbatim=False)
     if ratio_warning:
         warnings.append(ratio_warning)
-    return issues, warnings, {"topic_count": len(topics), "retention_ratio": ratio}
+    return issues, warnings, {"topic_count": len(topics) + len(plain_topics), "retention_ratio": ratio}
 
 
 def review_rows(section_text):

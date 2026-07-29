@@ -6,25 +6,37 @@ import sys
 from pathlib import Path
 
 from note_io_common import normalize_text, text_sha256, verify_readback
-from validate_transcript_artifact import analyze
+from validate_transcript_artifact import analyze, retention_warning
 
 
 RECAP_TERMS = ("复盘", "纪要", "总结", "核心结论", "只要核心", "行动项")
 LEARNING_TERMS = ("课程", "讲座", "读书", "知识框架", "学习材料", "知识点")
 BUSINESS_DIALOGUE_TERMS = ("商务", "客户", "销售", "合作", "访谈")
 EXPLICIT_EXCHANGE_TERMS = ("交流实录", "保留对话", "交流过程", "像聊天记录")
+NEGATED_EXCHANGE_TERMS = ("不要交流实录", "不做交流实录", "不用保留对话", "不要保留对话")
+MEDIUM_INTENSITY_TERMS = ("中度", "再精简一点", "更精简")
+HEAVY_INTENSITY_TERMS = ("重度", "大幅清理")
 
 
 def classify(text):
+    if any(term in text for term in EXPLICIT_EXCHANGE_TERMS) and not any(term in text for term in NEGATED_EXCHANGE_TERMS):
+        return "交流实录稿"
     if any(term in text for term in RECAP_TERMS):
         return "复盘纪要稿"
     if any(term in text for term in LEARNING_TERMS):
         return "学习整理稿"
-    if any(term in text for term in EXPLICIT_EXCHANGE_TERMS):
-        return "交流实录稿"
     if any(term in text for term in BUSINESS_DIALOGUE_TERMS):
         return "需要确认（推荐交流实录稿）"
     return "需要三选一"
+
+
+def classify_exchange_intensity(text):
+    normalized = text.replace("不要重度", "").replace("不用重度", "").replace("不要中度", "").replace("不用中度", "")
+    if any(term in normalized for term in HEAVY_INTENSITY_TERMS):
+        return "重度整理"
+    if any(term in normalized for term in MEDIUM_INTENSITY_TERMS):
+        return "中度精炼"
+    return "轻度精炼"
 
 
 def ratio_warning(source_chars, draft_chars):
@@ -61,14 +73,35 @@ def main():
         if not (root / relative).is_file():
             failures.append(f"branch contract missing: {relative}")
 
+    exchange_contract = read(root, "references/modes/exchange.md")
+    required_light_contract = (
+        "默认轻度精炼",
+        "中度精炼",
+        "重度整理（仍非摘要）",
+        "禁止把不相邻发言收进同一主题",
+    )
+    for phrase in required_light_contract:
+        if phrase not in exchange_contract:
+            failures.append(f"exchange light-calibration contract missing: {phrase}")
+    if "不得扩大为六种交付形式" not in skill_text:
+        failures.append("SKILL.md missing current-rules-over-history precedence")
+
     for case in cases["routing_cases"]:
         actual = classify(case["input"])
         if actual != case["expected"]:
             failures.append(f"route {case['input']!r}: expected {case['expected']}, got {actual}")
+    for case in cases["intensity_cases"]:
+        actual = classify_exchange_intensity(case["input"])
+        if actual != case["expected"]:
+            failures.append(f"intensity {case['input']!r}: expected {case['expected']}, got {actual}")
     for case in cases["ratio_cases"]:
         actual = ratio_warning(case["source_chars"], case["draft_chars"])
         if actual != case["expected_warning"]:
             failures.append(f"ratio {case['draft_chars']}/{case['source_chars']}: expected {case['expected_warning']!r}, got {actual!r}")
+    _, exchange_high_warning = retention_warning("稿" * 9000, "源" * 10000, warn_near_verbatim=False)
+    _, generic_high_warning = retention_warning("稿" * 9000, "源" * 10000)
+    if exchange_high_warning is not None or generic_high_warning is None:
+        failures.append("exchange high-retention warning policy regression")
 
     learning_source = read(root, quality["learning"]["source"])
     learning_good = analyze("learning", read(root, quality["learning"]["good"]), learning_source)
@@ -77,6 +110,9 @@ def main():
     review_good = analyze("review", read(root, quality["review"]["good"]), review_source)
     review_bad = analyze("review", read(root, quality["review"]["bad"]), review_source)
     exchange_good = analyze("exchange", read(root, quality["exchange"]["good"]), read(root, quality["exchange"]["source"]), 600)
+    untimed_source = "甲：这个方案我觉得还要再看看，明天 10:30 再开会。\n乙：好，我们继续讨论。"
+    untimed_good = analyze("exchange", "# 交流实录\n\n## 方案讨论\n\n**甲：** 这个方案我觉得还要再看看，明天 10:30 再开会。\n\n**乙：** 好，我们继续讨论。", untimed_source)
+    untimed_invented = analyze("exchange", "# 交流实录\n\n## 方案讨论 [00:00-00:30]\n\n**甲：** 这个方案我觉得还要再看看，明天 10:30 再开会。", untimed_source)
     for label, expected in (("learning good", learning_good["ok"]), ("review good", review_good["ok"]), ("exchange good", exchange_good["ok"])):
         if not expected:
             failures.append(f"{label} fixture failed")
@@ -84,6 +120,8 @@ def main():
         failures.append("bad learning fixture unexpectedly passed")
     if review_bad["ok"]:
         failures.append("bad review fixture unexpectedly passed")
+    if not untimed_good["ok"] or untimed_invented["ok"]:
+        failures.append("untimed exchange heading policy regression")
 
     speaker_map = json.loads(read(root, "evals/sample-speaker-map-low-confidence.json"))
     map_invalidated = json.loads(read(root, "evals/sample-speaker-map-invalidated.json"))
@@ -125,10 +163,12 @@ def main():
 
     report = {
         "ok": not failures,
+        "validation_scope": "deterministic structure, routing, speaker and save contracts only",
         "routing_cases": len(cases["routing_cases"]),
+        "intensity_cases": len(cases["intensity_cases"]),
         "ratio_cases": len(cases["ratio_cases"]),
         "branch_contracts": len(expected_contracts),
-        "mode_quality": {"learning_good": learning_good["ok"], "learning_bad_rejected": not learning_bad["ok"], "review_good": review_good["ok"], "review_bad_rejected": not review_bad["ok"], "exchange_good": exchange_good["ok"]},
+        "mode_quality": {"learning_good": learning_good["ok"], "learning_bad_rejected": not learning_bad["ok"], "review_good": review_good["ok"], "review_bad_rejected": not review_bad["ok"], "exchange_good": exchange_good["ok"], "untimed_exchange_good": untimed_good["ok"], "untimed_exchange_invented_time_rejected": not untimed_invented["ok"]},
         "speaker_lock": expectations,
         "read_back": verify_good["read_back"] == "verified" and verify_bad["read_back"] == "mismatch",
         "save_scripts": script_contracts,
