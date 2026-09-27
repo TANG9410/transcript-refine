@@ -6,9 +6,12 @@ import json
 import os
 import sys
 
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None
 
-from note_io_common import verify_readback
+from note_io_common import require_final_validation, verify_readback
 
 
 CONFIG_PATHS = [
@@ -18,27 +21,30 @@ CONFIG_PATHS = [
 API_BASE = "https://openapi.biji.com/open/api/v1/resource"
 
 
-def resolve_config_path(explicit_config=None):
-    candidates = [explicit_config] if explicit_config else []
-    candidates.extend(CONFIG_PATHS)
-    for path in candidates:
-        if path and os.path.isfile(path):
-            return path
-    return None
-
-
 def load_config(explicit_config=None):
-    path = resolve_config_path(explicit_config)
-    if not path:
-        raise FileNotFoundError(
-            "Getnote optional adapter config not found. Use local Markdown output, or provide --config <your-local-config.json>."
-        )
-    with open(path, "r", encoding="utf-8") as handle:
-        return json.load(handle)
+    candidates = [explicit_config] if explicit_config else CONFIG_PATHS
+    for path in candidates:
+        if os.path.isfile(path):
+            with open(path, "r", encoding="utf-8-sig") as handle:
+                config = json.load(handle)
+            if not isinstance(config, dict) or not all(
+                isinstance(config.get(key), str) and config[key].strip()
+                for key in ("api_key", "client_id")
+            ):
+                raise ValueError("Getnote config requires nonempty api_key and client_id; values are never logged")
+            return config
+    raise FileNotFoundError(
+        "Getnote optional adapter config not found. Use local Markdown output, or provide --config <your-local-config.json>."
+    )
+
+
+def require_requests():
+    if requests is None:
+        raise RuntimeError("Getnote optional adapter requires requests; install requirements-getnote.txt or use local Markdown output")
 
 
 def read_file_content(filepath):
-    with open(filepath, "r", encoding="utf-8") as handle:
+    with open(filepath, "r", encoding="utf-8-sig") as handle:
         return handle.read()
 
 
@@ -54,6 +60,7 @@ def build_update_payload(note_id, title=None, content=None):
 def update_note(config, payload, dry_run=False):
     if dry_run:
         return None
+    require_requests()
     return requests.post(
         f"{API_BASE}/note/update",
         headers={
@@ -66,6 +73,7 @@ def update_note(config, payload, dry_run=False):
 
 
 def get_note_detail(config, note_id):
+    require_requests()
     response = requests.get(
         f"{API_BASE}/note/detail",
         headers={
@@ -99,13 +107,14 @@ def emit(report, json_mode):
 def main():
     parser = argparse.ArgumentParser(description="更新Get笔记并执行read-back；不删除本地文件")
     parser.add_argument("--note-id", required=True, help="用户明确指定的既有精炼笔记ID")
-    parser.add_argument("--config", default=None, help="可选：使用者自己的本机 Getnote 配置路径")
     parser.add_argument("--title", default=None, help="新标题（可选）")
     parser.add_argument("--file", default=None, help="从文件读取内容（UTF-8）")
     parser.add_argument("--content", default=None, help="直接传入短文本")
+    parser.add_argument("--validation-report", default=None, help="正文变更所需的 final_ready=true 最终校验报告")
     parser.add_argument("--dry-run", action="store_true", help="试运行，不实际更新")
     parser.add_argument("--no-cleanup", action="store_true", help="兼容旧命令；文件始终保留")
     parser.add_argument("--json", action="store_true", help="输出JSON保存与read-back结果")
+    parser.add_argument("--config", help="可选 Getnote 配置路径；不复制或打印凭证")
     args = parser.parse_args()
 
     if not args.title and not args.file and not args.content:
@@ -114,8 +123,10 @@ def main():
         parser.error("--file 和 --content 不能同时使用")
 
     content = read_file_content(args.file) if args.file else args.content
+    if content is not None:
+        require_final_validation(args.validation_report, content)
     warning = "--no-cleanup 已无需使用；脚本不会删除任何本地文件" if args.no_cleanup else None
-    config = load_config(args.config)
+    config = load_config(args.config) if args.config else load_config()
     payload = build_update_payload(args.note_id, title=args.title, content=content)
 
     if args.dry_run:

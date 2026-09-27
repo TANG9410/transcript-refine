@@ -1,115 +1,45 @@
 {
   "routing_cases": [
-    {
-      "input": "整理这篇商务逐字稿",
-      "expected": "需要确认（推荐交流实录稿）"
-    },
-    {
-      "input": "保留对话的感觉，把交流过程整理清楚",
-      "expected": "交流实录稿"
-    },
-    {
-      "input": "给我交流实录稿，不要总结",
-      "expected": "交流实录稿"
-    },
-    {
-      "input": "不要交流实录，给我复盘和行动项",
-      "expected": "复盘纪要稿"
-    },
-    {
-      "input": "这次客户访谈帮我整理一下",
-      "expected": "需要确认（推荐交流实录稿）"
-    },
-    {
-      "input": "只要复盘和行动项，不用保留完整对话",
-      "expected": "复盘纪要稿"
-    },
-    {
-      "input": "给我一份会议纪要和核心结论",
-      "expected": "复盘纪要稿"
-    },
-    {
-      "input": "整理这堂课程，形成知识框架",
-      "expected": "学习整理稿"
-    },
-    {
-      "input": "把这次讲座和案例整理成学习材料",
-      "expected": "学习整理稿"
-    },
-    {
-      "input": "整理一下",
-      "expected": "需要三选一"
-    }
+    {"input": "整理这篇商务逐字稿", "expected": "需要确认（推荐交流实录稿）"},
+    {"input": "保留对话的感觉，把交流过程整理清楚", "expected": "交流实录稿"},
+    {"input": "给我交流实录稿，不要总结", "expected": "交流实录稿"},
+    {"input": "不要交流实录，给我复盘和行动项", "expected": "复盘纪要稿"},
+    {"input": "这次客户访谈帮我整理一下", "expected": "需要确认（推荐交流实录稿）"},
+    {"input": "只要复盘和行动项，不用保留完整对话", "expected": "复盘纪要稿"},
+    {"input": "给我一份会议纪要和核心结论", "expected": "复盘纪要稿"},
+    {"input": "整理这堂课程，形成知识框架", "expected": "学习整理稿"},
+    {"input": "把这次讲座和案例整理成学习材料", "expected": "学习整理稿"},
+    {"input": "整理一下", "expected": "需要三选一"}
   ],
   "intensity_cases": [
-    {
-      "input": "交流实录稿",
-      "expected": "轻度精炼"
-    },
-    {
-      "input": "交流实录稿，按默认尺度整理",
-      "expected": "轻度精炼"
-    },
-    {
-      "input": "交流实录稿，中度整理",
-      "expected": "中度精炼"
-    },
-    {
-      "input": "交流实录稿，再精简一点",
-      "expected": "中度精炼"
-    },
-    {
-      "input": "交流实录稿，重度整理",
-      "expected": "重度整理"
-    },
-    {
-      "input": "交流实录稿，大幅清理口水词",
-      "expected": "重度整理"
-    },
-    {
-      "input": "交流实录稿，不要重度，按中度整理",
-      "expected": "中度精炼"
-    },
-    {
-      "input": "交流实录稿，不要中度，按重度整理",
-      "expected": "重度整理"
-    }
+    {"input": "交流实录稿", "expected": "轻度精炼"},
+    {"input": "交流实录稿，按默认尺度整理", "expected": "轻度精炼"},
+    {"input": "交流实录稿，中度整理", "expected": "中度精炼"},
+    {"input": "交流实录稿，再精简一点", "expected": "中度精炼"},
+    {"input": "交流实录稿，重度整理", "expected": "重度整理"},
+    {"input": "交流实录稿，大幅清理口水词", "expected": "重度整理"},
+    {"input": "交流实录稿，不要重度，按中度整理", "expected": "中度精炼"},
+    {"input": "交流实录稿，不要中度，按重度整理", "expected": "重度整理"}
   ],
-  "ratio_cases": [
-    {
-      "source_chars": 61349,
-      "draft_chars": 5276,
-      "expected_warning": "possible over-compression"
-    },
-    {
-      "source_chars": 61349,
-      "draft_chars": 57569,
-      "expected_warning": "possible near-verbatim搬运"
-    },
-    {
-      "source_chars": 61349,
-      "draft_chars": 24682,
-      "expected_warning": null,
-      "note": "比例正常也不能单独判定语义合格"
-    },
-    {
-      "source_chars": 39178,
-      "draft_chars": 8290,
-      "expected_warning": "possible over-compression",
-      "note": "学习整理稿要点化失败案例"
-    },
-    {
-      "source_chars": 39178,
-      "draft_chars": 28009,
-      "expected_warning": null,
-      "note": "详细学习稿方向，仍需检查知识结构和覆盖表"
-    }
+  "retention_metric_cases": [
+    {"source_chars": 61349, "draft_chars": 5276, "expected_warning": null},
+    {"source_chars": 61349, "draft_chars": 57569, "expected_warning": null},
+    {"source_chars": 61349, "draft_chars": 24682, "expected_warning": null},
+    {"source_chars": 39178, "draft_chars": 8290, "expected_warning": null},
+    {"source_chars": 39178, "draft_chars": 28009, "expected_warning": null}
+  ],
+  "length_cases": [
+    {"source_chars": 12000, "expected_split_proposal": false},
+    {"source_chars": 35000, "expected_split_proposal": false},
+    {"source_chars": 35001, "expected_split_proposal": true}
+  ],
+  "multi_source_cases": [
+    {"fact_source_count": 1, "explicit_merge": false, "expected": false},
+    {"fact_source_count": 1, "explicit_merge": true, "expected": true},
+    {"fact_source_count": 2, "explicit_merge": false, "expected": true}
   ],
   "speaker_cases": [
-    {
-      "people": 3,
-      "asr_channels": 2,
-      "expected": "必须建立人工锚点或使用低置信标签，禁止声道直接映射姓名"
-    }
+    {"people": 5, "asr_channels": 5, "attribution_stable": true, "expected_map_required": false},
+    {"people": 2, "asr_channels": 1, "attribution_stable": false, "expected": "use low-confidence labels or an evidence-backed speaker map"}
   ]
 }

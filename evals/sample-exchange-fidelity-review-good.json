@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "mode": "exchange",
+  "source_sha256": "fba9df2c3b9b2314632901e05b342ef874d38e9bbbb77a9ffe389ad4a932cffc",
+  "draft_sha256": "293262a405ef6d74dde8bafd9fc54fbe858a19dbfe8cdc7ebfaf2b4362c8ab9c",
+  "samples": [
+    {
+      "kind": "opening",
+      "source_locator": "00:00:03",
+      "draft_locator": "目录服务与书店情况",
+      "source_quote": "服务一年六百元，我们会先清点书目",
+      "draft_quote": "服务一年六百元，我们会先清点书目",
+      "preserved_items": [
+        "虚构样例中对应信息完整保留；仅用于离线接口测试"
+      ],
+      "unresolved_items": [],
+      "blocking_issues": [],
+      "status": "pass"
+    },
+    {
+      "kind": "middle",
+      "source_locator": "00:01:12",
+      "draft_locator": "选书方式与成本顾虑",
+      "source_quote": "再比较价格、版次和保存情况",
+      "draft_quote": "再比较价格、版次和保存情况",
+      "preserved_items": [
+        "虚构样例中对应信息完整保留；仅用于离线接口测试"
+      ],
+      "unresolved_items": [],
+      "blocking_issues": [],
+      "status": "pass"
+    },
+    {
+      "kind": "ending",
+      "source_locator": "00:02:08",
+      "draft_locator": "选书方式与成本顾虑",
+      "source_quote": "下周发给您，您有需要时再联系",
+      "draft_quote": "下周发给您，您有需要时再联系",
+      "preserved_items": [
+        "虚构样例中对应信息完整保留；仅用于离线接口测试"
+      ],
+      "unresolved_items": [],
+      "blocking_issues": [],
+      "status": "pass"
+    }
+  ],
+  "risk_checks": [
+    {
+      "kind": "numbers_prices",
+      "status": "checked",
+      "source_locators": [
+        "00:00:03-00:02:20"
+      ],
+      "draft_locators": [
+        "目录服务与书店情况",
+        "选书方式与成本顾虑"
+      ],
+      "source_quotes": [
+        "服务一年六百元",
+        "八百元包含书目整理和拍照"
+      ],
+      "draft_quotes": [
+        "服务一年六百元",
+        "八百元包含书目整理和拍照"
+      ],
+      "preserved_items": [
+        "虚构样例中的费用、条件和安排保持原意"
+      ],
+      "blocking_issues": []
+    },
+    {
+      "kind": "questions_objections",
+      "status": "checked",
+      "source_locators": [
+        "00:00:03-00:02:20"
+      ],
+      "draft_locators": [
+        "目录服务与书店情况",
+        "选书方式与成本顾虑"
+      ],
+      "source_quotes": [
+        "但我还是要考虑成本"
+      ],
+      "draft_quotes": [
+        "但我还是要考虑成本"
+      ],
+      "preserved_items": [
+        "虚构样例中的费用、条件和安排保持原意"
+      ],
+      "blocking_issues": []
+    },
+    {
+      "kind": "commitments_next_steps",
+      "status": "checked",
+      "source_locators": [
+        "00:00:03-00:02:20"
+      ],
+      "draft_locators": [
+        "目录服务与书店情况",
+        "选书方式与成本顾虑"
+      ],
+      "source_quotes": [
+        "下周发给您",
+        "后面有空再聊"
+      ],
+      "draft_quotes": [
+        "下周发给您",
+        "后面有空再聊"
+      ],
+      "preserved_items": [
+        "虚构样例中的费用、条件和安排保持原意"
+      ],
+      "blocking_issues": []
+    },
+    {
+      "kind": "speaker_asr_uncertainty",
+      "status": "not_present",
+      "blocking_issues": []
+    },
+    {
+      "kind": "technical_interlude",
+      "status": "not_present",
+      "blocking_issues": []
+    }
+  ],
+  "result": "pass"
+}

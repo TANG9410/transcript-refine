@@ -1,0 +1,113 @@
+﻿{
+    "version":  1,
+    "mode":  "exchange",
+    "source_sha256":  "4f7e29780b5a0baa31f927a980e2a20312e76a6683f3802f680fc5d1082a0594",
+    "draft_sha256":  "2e93b2f21f78d06c1fced6107a354903df77cbcdcf3564963516190def2763bd",
+    "speaker_map_sha256":  "1967e441d0aafb3e0312c72c1e1e0850066950ee03f6d50576f60bb8291a3cfd",
+    "samples":  [
+                    {
+                        "kind":  "opening",
+                        "status":  "pass",
+                        "source_quote":  "你好，这里身份不确定。",
+                        "preserved_items":  [
+                                                "低置信身份和原话含义"
+                                            ],
+                        "draft_quote":  "你好，这里身份不确定。",
+                        "blocking_issues":  [
+
+                                            ],
+                        "source_locator":  "00:00-00:02",
+                        "draft_locator":  "身份确认",
+                        "unresolved_items":  [
+
+                                             ]
+                    },
+                    {
+                        "kind":  "middle",
+                        "status":  "pass",
+                        "source_quote":  "你好，这里身份不确定。",
+                        "preserved_items":  [
+                                                "低置信身份和原话含义"
+                                            ],
+                        "draft_quote":  "你好，这里身份不确定。",
+                        "blocking_issues":  [
+
+                                            ],
+                        "source_locator":  "00:00-00:02",
+                        "draft_locator":  "身份确认",
+                        "unresolved_items":  [
+
+                                             ]
+                    },
+                    {
+                        "kind":  "ending",
+                        "status":  "pass",
+                        "source_quote":  "你好，这里身份不确定。",
+                        "preserved_items":  [
+                                                "低置信身份和原话含义"
+                                            ],
+                        "draft_quote":  "你好，这里身份不确定。",
+                        "blocking_issues":  [
+
+                                            ],
+                        "source_locator":  "00:00-00:02",
+                        "draft_locator":  "身份确认",
+                        "unresolved_items":  [
+
+                                             ]
+                    }
+                ],
+    "risk_checks":  [
+                        {
+                            "status":  "not_present",
+                            "blocking_issues":  [
+
+                                                ],
+                            "kind":  "numbers_prices"
+                        },
+                        {
+                            "status":  "not_present",
+                            "blocking_issues":  [
+
+                                                ],
+                            "kind":  "questions_objections"
+                        },
+                        {
+                            "status":  "not_present",
+                            "blocking_issues":  [
+
+                                                ],
+                            "kind":  "commitments_next_steps"
+                        },
+                        {
+                            "preserved_items":  [
+                                                    "身份不确定以低置信标签保留"
+                                                ],
+                            "source_quotes":  [
+                                                  "身份不确定"
+                                              ],
+                            "draft_quotes":  [
+                                                 "低置信说话人1"
+                                             ],
+                            "source_locators":  [
+                                                    "00:00-00:02"
+                                                ],
+                            "blocking_issues":  [
+
+                                                ],
+                            "kind":  "speaker_asr_uncertainty",
+                            "status":  "checked",
+                            "draft_locators":  [
+                                                   "身份确认"
+                                               ]
+                        },
+                        {
+                            "status":  "not_present",
+                            "blocking_issues":  [
+
+                                                ],
+                            "kind":  "technical_interlude"
+                        }
+                    ],
+    "result":  "pass"
+}

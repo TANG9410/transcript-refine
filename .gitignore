@@ -6,6 +6,7 @@ __pycache__/
 
 # Runtime output and local private state
 outputs/
+.transcript-refine/
 .workbuddy/
 *.log
 *.tmp
@@ -14,6 +15,7 @@ outputs/
 # Secrets and local environment files
 .env
 .env.*
-!.env.example
 *.pem
 *.key
+config.json
+getnote-config.json

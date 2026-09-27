@@ -8,7 +8,7 @@
       "asr_label": "说话人1",
       "output_label": "说话人A",
       "person": null,
-      "candidates": ["唐玮"],
+      "candidates": ["示例甲"],
       "evidence": ["用户已纠正原映射，待重新核对"],
       "confidence": "low",
       "status": "unresolved"

@@ -1,8 +1,8 @@
 {
-  "name": "transcript-refine-v3",
-  "version": "3.9.1",
+  "name": "transcript-refine",
+  "version": "4.1.2",
   "owner": "唐玮",
-  "updated_at": "2026-07-29",
+  "updated_at": "2026-09-27",
   "status": "active",
   "maturity_tier": "production",
   "lifecycle_stage": "production",
@@ -16,12 +16,12 @@
   "factory_components": [
     "references",
     "scripts",
-    "data",
-    "evals",
-    "reports"
+    "evals"
   ],
   "metadata": {
-    "philosophy": "公共路由，交流轻度保真，单分支强制加载，人物按需锁定，保存可验证",
+    "philosophy": "准备材料、集中整理复核、统一检查交付",
+    "initial_load_target_tokens": 1000,
+    "mandatory_pair_target_tokens": 2500,
     "primary_artifacts": [
       "交流实录稿",
       "复盘纪要稿",
@@ -32,58 +32,66 @@
       "复盘纪要稿": "references/modes/review.md",
       "学习整理稿": "references/modes/learning.md"
     },
+    "mandatory_runtime_context": [
+      "SKILL.md",
+      "exactly-one-selected-references/modes-contract"
+    ],
     "default_artifact": "未明确商务或多人对话时须用户确认（推荐交流实录稿）",
     "default_exchange_intensity": "轻度精炼；仅在用户明确要求时切换中度或重度，不追加二次确认",
+    "source_by_note_type": {
+      "audio|recorder_audio|meeting": "audio.original",
+      "link|web_page": "data.note.web_page.content",
+      "user_file|user_text": "user-provided-original"
+    },
     "default_destination": "local-markdown",
-    "temporary_workspace": ".workbuddy/temp/transcript-refine/<task-id>",
+    "temporary_workspace": ".transcript-refine/<task-id>",
+    "long_source_split": {
+      "trigger": "source_text_chars > 35000",
+      "action": "propose-once-and-wait",
+      "plan_fields": [
+        "estimated_part_count",
+        "part_titles",
+        "continuous_topic_or_time_boundaries"
+      ],
+      "before_confirmation": "do-not-split-or-save-multiple-notes"
+    },
+    "multi_source_policy": {
+      "default": "skip-for-single-source",
+      "activate_only_when": [
+        "two-or-more-fact-sources",
+        "user-explicitly-requests-merge"
+      ],
+      "conflicts": "mark-pending-confirmation"
+    },
     "key_gates": [
-      "路由后必须完整读取唯一对应分支合同",
-      "交流实录默认轻度精炼，三档只改变清理力度，不改变信息删留标准",
-      "交流实录保持原始时间和话轮，禁止跨时间搬运、非相邻合并和摘要化重组",
-      "当前 SKILL.md 与唯一分支合同高于旧版记忆和历史任务总结",
-      "复杂多人交流先建立 speaker-map，未锁定人物禁止使用姓名",
-      "用户纠正人物后旧映射与受影响稿件立即失效并全局复查",
-      "本地只保留一份当前最终稿，过程文件进入隐藏临时目录",
-      "默认不额外复制原始逐字稿",
-      "保存脚本不得删除或移动输入文件",
-      "保存后标题、长度与规范化 SHA256 read-back 必须一致",
-      "比例只触发异常复核，不作为合格目标"
-    ],
-    "changelog_3_9_1": [
-      "在 3.9.0 开源包装层上合入内部 3.8.1 的交流实录轻度保真校准",
-      "交流实录确认后默认轻度精炼，不再追加尺度确认；仅在用户明确要求时切换中度或重度",
-      "新增轻度、中度、重度同源对照，禁止跨时间搬运、非相邻话轮合并和主题化重写",
-      "公共精炼收紧为明确 ASR 修正和原句附近最小修补，无时间事实源不得编造时间范围",
-      "明确当前三模式合同高于旧版记忆，3.4.3 和 3.4.4 的六选项不得参与当前执行",
-      "公开版继续默认本地 Markdown，Get笔记只作为显式启用的可选适配器"
-    ],
-    "changelog_3.8.0": [
-      "商务、客户、销售、合作、访谈和普通多人对话未明确交付形态时，改为推荐交流实录稿并等待确认",
-      "新增 Claude Code 强制入口与最终交付护栏，禁止跳过 Skill 直接写本地最终稿"
-    ],
-    "changelog_3.7.0": [
-      "新增复杂多人 speaker-map 锁定流程和确定性校验",
-      "人物未锁定时只允许低置信标签，人物纠正使旧映射和旧稿失效",
-      "统一最终稿、过程文件、原始逐字稿和本地旧版的存放规则",
-      "重构创建与更新脚本为单一保存职责，永久取消自动删除和移动",
-      "新增保存后标题、长度和规范化 SHA256 read-back 及 JSON 结果",
-      "交流校验支持多种时间范围符号、内联时间戳检测和统一附录边界"
+      "默认只加载 SKILL.md 与唯一所选模式合同；用户提供并认可术语表时按需加载",
+      "主稿未明确的商务或多人任务先展示三项并等待选择",
+      "正常任务经 transcript_task.py prepare/review/deliver，旧底层命令仅兼容和排查",
+      "事实源按 note_type 提取，禁止模型重抄；原始笔记标题与内容不动",
+      "交流保留原顺序，学习和复盘按各自模式组织；不按比例或时长删补字",
+      "人物标签与人数不作为声纹证据；不在普通整理任务中自动做音频分离",
+      "短回应、人物合并、数字修正由模型结合上下文判断",
+      "原文超过35000字符先提出一次拆篇方案并等待选择；单源跳过多源处理",
+      "复核骨架初始pending；行范围内自动提取真实引文，不自动通过或清空问题",
+      "新主线每条引文与对应行范围匹配；旧自由文字定位仅兼容，明确未范围验真",
+      "原文、正文、人物映射或复核位置改变后不得沿用旧通过状态",
+      "final_ready只表示结构与证据检查通过以及模型已提交复核结论，不证明语义正确",
+      "默认本地交付，Get新建或更新须显式目的地；更新须明确目标精炼笔记",
+      "完整最终报告、文件哈希和证据摘要匹配后保存并read-back",
+      "保存不删除或移动输入；未经定位的故障原因不进入长期操作规则"
     ],
     "derived_from": [
-      "transcript-refine-v3 3.6.0",
-      "复杂多人逐字稿历史线程证据审计",
-      "用户对本地文件数量与一级目录整洁度的实际反馈"
+      "本地维护版 4.1.2",
+      "公开版 3.9.1 的安装与可选 Getnote 适配"
     ],
-    "optional_adapters": {
-      "getnote": "Enable only after an explicit user request and a user-owned local configuration; never store credentials in the repository, prompts, or reports."
-    },
-    "changelog_3_9_0": [
-      "Open-source release defaults to local Markdown; Getnote read/write is an optional adapter.",
-      "Added safe installer, MIT license, contribution and security policies, and public-release governance evidence."
+    "normal_entrypoint": "scripts/transcript_task.py",
+    "optional_integrations": [
+      "Getnote MCP 或 OpenAPI（使用者自行配置）"
+    ],
+    "changelog_4.1.2_public": [
+      "产品更名为 transcript-refine，版本保持 4.1.2",
+      "本地文本整理仅依赖 Python 标准库，Getnote 为可选接入",
+      "不包含个人术语表、真实客户资料或本机配置"
     ]
-  },
-  "input_files": "file-backed fixture",
-  "output_contract": "Three transcript artifact modes; local Markdown by default; Getnote writes require explicit user request and local configuration.",
-  "rollback_boundary": "Rollback only the public repository release or installed copy; never modify source transcripts, remote notes, or local credentials.",
-  "trust_report": "reports/trust-report.md"
+  }
 }

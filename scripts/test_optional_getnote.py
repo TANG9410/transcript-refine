@@ -38,6 +38,19 @@ def main():
             loaded = module.load_config(str(config))
             if loaded != {"api_key": "test", "client_id": "test"}:
                 failures.append(f"{module.__name__}: explicit config did not load")
+            module.CONFIG_PATHS = [str(config)]
+            try:
+                module.load_config(str(root / "explicit-missing.json"))
+                failures.append(f"{module.__name__}: explicit missing config fell back to another account")
+            except FileNotFoundError:
+                pass
+            invalid = root / "invalid.json"
+            invalid.write_text('{"api_key": "fixture-only"}', encoding="utf-8")
+            try:
+                module.load_config(str(invalid))
+                failures.append(f"{module.__name__}: incomplete config unexpectedly succeeded")
+            except ValueError:
+                pass
     test_temp_root.rmdir()
     print("optional-getnote regression: " + ("PASS" if not failures else "FAIL"))
     for failure in failures:

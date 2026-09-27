@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "invalidated": false,
+  "people_count": 2,
+  "asr_channel_count": 1,
+  "mappings": [
+    {
+      "asr_label": "说话人1",
+      "output_label": "说话人A",
+      "person": null,
+      "candidates": ["示例甲", "示例乙"],
+      "evidence": ["该时间段角色归属仍不稳定，正文保留低置信标签"],
+      "confidence": "low",
+      "status": "unresolved",
+      "source_span": {"kind": "time", "start": "00:00", "end": "01:30"}
+    },
+    {
+      "asr_label": "说话人1",
+      "output_label": "示例乙",
+      "person": "示例乙",
+      "candidates": [],
+      "evidence": ["该时间段有明确称呼与业务角色证据"],
+      "confidence": "high",
+      "status": "locked",
+      "source_span": {"kind": "time", "start": "01:30", "end": "03:00"}
+    }
+  ]
+}

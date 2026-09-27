@@ -1,0 +1,27 @@
+﻿{
+    "version":  2,
+    "invalidated":  false,
+    "mappings":  [
+                     {
+                         "confidence":  "low",
+                         "source_span":  {
+                                             "start":  "00:00",
+                                             "end":  "00:02",
+                                             "kind":  "time"
+                                         },
+                         "output_label":  "低置信说话人1",
+                         "person":  null,
+                         "candidates":  [
+                                            "客户",
+                                            "现场第三人"
+                                        ],
+                         "status":  "unresolved",
+                         "evidence":  [
+                                          "身份不稳定，正文保留低置信标签"
+                                      ],
+                         "asr_label":  "说话人1"
+                     }
+                 ],
+    "people_count":  2,
+    "asr_channel_count":  1
+}

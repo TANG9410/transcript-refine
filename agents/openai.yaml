@@ -1,0 +1,4 @@
+interface:
+  display_name: "Transcript Refine"
+  short_description: "将中文逐字稿整理为交流实录、复盘纪要或学习材料，保留事实与疑点"
+  default_prompt: "使用 $transcript-refine 整理这份逐字稿，先确认主稿形式，再核对原文并交付本地 Markdown。"

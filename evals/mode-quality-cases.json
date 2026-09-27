@@ -11,6 +11,14 @@
   },
   "exchange": {
     "source": "evals/sample-source.txt",
-    "good": "evals/sample-exchange.md"
+    "good": "evals/sample-exchange.md",
+    "fidelity_source": "evals/sample-exchange-fidelity-source.txt",
+    "fidelity_good": "evals/sample-exchange-fidelity-good.md",
+    "fidelity_review_good": "evals/sample-exchange-fidelity-review-good.json",
+    "fidelity_bad": [
+      "evals/sample-exchange-fidelity-overcompressed.md",
+      "evals/sample-exchange-fidelity-timeshift.md",
+      "evals/sample-exchange-fidelity-invented.md"
+    ]
   }
 }
